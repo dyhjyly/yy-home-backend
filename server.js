@@ -15,6 +15,15 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
+//新增聊天接口
+app.post('/chat', async (req, res) => {
+  const { message } = req.body;
+
+  res.json({
+    reply: `收到啦：${message}`,
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
