@@ -1,0 +1,14 @@
+{
+  "name": "jiangyu-home-backend",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5"
+  }
+}
