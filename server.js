@@ -1,27 +1,58 @@
 import express from 'express';
 import cors from 'cors';
+import Anthropic from '@anthropic-ai/sdk';
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
+const anthropic = new Anthropic({
+  apiKey: process.env.CLAUDE_API_KEY,
+});
+
 app.get('/', (req, res) => {
-  res.json({ status: 'ok', message: '服务正常' });
+  res.json({
+    status: 'ok',
+    message: '服务正常',
+  });
 });
 
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
+  res.json({
+    status: 'ok',
+  });
 });
 
-//新增聊天接口
 app.post('/chat', async (req, res) => {
-  const { message } = req.body;
+  try {
+    const { message } = req.body;
 
-  res.json({
-    reply: `收到啦：${message}`,
-  });
+    const response = await anthropic.messages.create({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1024,
+      messages: [
+        {
+          role: 'user',
+          content: message,
+        },
+      ],
+    });
+
+    const reply = response.content[0].text;
+
+    res.json({
+      reply,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      reply: '抱歉，我刚刚有点走神了。',
+    });
+  }
 });
 
 app.listen(PORT, () => {
